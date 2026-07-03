@@ -52,33 +52,33 @@ Player = class {
   }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   $.ajax({
     type: "GET",
     url: "./exptable.csv",
     dataType: "text",
-    success: function(data) {
+    success: function (data) {
       showExpTable(data);
-    }
+    },
   });
 
   $("#perexp-rate-box").hide();
 
   $(document).tooltip({
-    show: { effect: 'slideDown', delay: 1000, duration: 250 }
+    show: { effect: "slideDown", delay: 1000, duration: 250 },
   });
 
   refreshHistory();
   refreshLogs();
 
   if (players.length == 0) {
-    $("#search-ign-input").val("srslyguys");
+    $("#search-ign-input").val("oldkev");
     $("#search-ign-input-btn").click();
     $("#search-ign-input").val("");
   }
 
   let input = document.getElementById("search-ign-input");
-  input.addEventListener("keyup", function(event) {
+  input.addEventListener("keyup", function (event) {
     if (event.keyCode === 13) {
       event.preventDefault();
       document.getElementById("search-ign-input-btn").click();
@@ -90,7 +90,8 @@ $(document).ready(function() {
     let csvContent = "data:text/csv;charset=utf-8,";
     //convert array of objects to JSON stringify
     let temp = JSON.stringify(history);
-    csvContent += "id,date,time,ign,startlvl,startexp,endlvl,endexp,expgained,cost,isProfit\n";
+    csvContent +=
+      "id,date,time,ign,startlvl,startexp,endlvl,endexp,expgained,cost,isProfit\n";
     //convert the json string to a csv and add to content
     csvContent += ConvertToCSV(temp);
     let encodedUri = encodeURI(csvContent);
@@ -98,8 +99,10 @@ $(document).ready(function() {
     //setting encoded URI
     link.setAttribute("href", encodedUri);
     //setting a customer file name
-    link.setAttribute("download",
-      `history_${dateObj.getDate()}-${parseInt(dateObj.getMonth()) + 1}-${dateObj.getFullYear()}.csv`);
+    link.setAttribute(
+      "download",
+      `history_${dateObj.getDate()}-${parseInt(dateObj.getMonth()) + 1}-${dateObj.getFullYear()}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -118,8 +121,10 @@ $(document).ready(function() {
     //setting encoded URI
     link.setAttribute("href", encodedUri);
     //setting a customer file name
-    link.setAttribute("download",
-      `expLog_${dateObj.getDate()}-${parseInt(dateObj.getMonth()) + 1}-${dateObj.getFullYear()}.csv`);
+    link.setAttribute(
+      "download",
+      `expLog_${dateObj.getDate()}-${parseInt(dateObj.getMonth()) + 1}-${dateObj.getFullYear()}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -130,15 +135,24 @@ $(document).ready(function() {
     if (isHourlyRate) {
       $("#perexp-rate-box").toggle("slow");
       $("#hourly-rate-box").toggle("slow");
-      if (!$("#startpercent").is(':checked') && !$("#endpercent").is(':checked')) {
+      if (
+        !$("#startpercent").is(":checked") &&
+        !$("#endpercent").is(":checked")
+      ) {
         $("#formula").text(`
           ${formulaString} - startExp) + endExp) / eph * price
         `);
-      } else if ($("#startpercent").is(':checked') && $("#endpercent").is(':checked')) {
+      } else if (
+        $("#startpercent").is(":checked") &&
+        $("#endpercent").is(":checked")
+      ) {
         $("#formula").text(`
           ${formulaString} - expToLvl[startLvl] * (startPct/100)) + expToLvl[endLvl] * (endPct/100)) / eph * price
         `);
-      } else if (!$("#startpercent").is(':checked') && $("#endpercent").is(':checked')) {
+      } else if (
+        !$("#startpercent").is(":checked") &&
+        $("#endpercent").is(":checked")
+      ) {
         $("#formula").text(`
           ${formulaString} - startExp) + expToLvl[endLvl] * (endPct/100)) / eph * price
         `);
@@ -150,15 +164,24 @@ $(document).ready(function() {
     } else {
       $("#hourly-rate-box").toggle("slow");
       $("#perexp-rate-box").toggle("slow");
-      if (!$("#startpercent").is(':checked') && !$("#endpercent").is(':checked')) {
+      if (
+        !$("#startpercent").is(":checked") &&
+        !$("#endpercent").is(":checked")
+      ) {
         $("#formula").text(`
           ${formulaString} - startExp) + endExp) / rate
         `);
-      } else if ($("#startpercent").is(':checked') && $("#endpercent").is(':checked')) {
+      } else if (
+        $("#startpercent").is(":checked") &&
+        $("#endpercent").is(":checked")
+      ) {
         $("#formula").text(`
           ${formulaString} - expToLvl[startLvl] * (startPct/100)) + expToLvl[endLvl] * (endPct/100)) / rate
         `);
-      } else if (!$("#startpercent").is(':checked') && $("#endpercent").is(':checked')) {
+      } else if (
+        !$("#startpercent").is(":checked") &&
+        $("#endpercent").is(":checked")
+      ) {
         $("#formula").text(`
           ${formulaString} - startExp) + expToLvl[endLvl] * (endPct/100)) / rate
         `);
@@ -196,19 +219,19 @@ calculate = () => {
             let rate = parseFloat($("#rate").val());
             expGained = 0;
             if (startexp !== 0) {
-              if ($("#startpercent").is(':checked')) {
-                if(startexp >= 0 && startexp < 101){
+              if ($("#startpercent").is(":checked")) {
+                if (startexp >= 0 && startexp < 101) {
                   startexp = lvlUpExp[startlvl] * (startexp / 100);
-                }else{
+                } else {
                   alert("Please check start percentage, must be a value 0-100");
                   return;
                 }
               }
             }
-            if ($("#endpercent").is(':checked')) {
-              if(endexp >= 0 && endexp < 101){
+            if ($("#endpercent").is(":checked")) {
+              if (endexp >= 0 && endexp < 101) {
                 endexp = lvlUpExp[endlvl] * (endexp / 100);
-              }else{
+              } else {
                 alert("Please check finish percentage, must be a value 0-100");
                 return;
               }
@@ -222,17 +245,31 @@ calculate = () => {
             $("#total-exp").remove();
             $("#outputbox").append(`<p id="total-exp"></p>`);
             $("#total-exp").hide();
-            $("#total-exp").html(`Total exp: ${formatNum(expGained.toFixed(2))}`);
+            $("#total-exp").html(
+              `Total exp: ${formatNum(expGained.toFixed(2))}`,
+            );
             $("#total").show(200, "linear");
             $("#total-exp").show(200, "linear");
             let dateObj = new Date();
-            let time = new Date(dateObj.getTime()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            let record = new historyRecord(history.length > 0 ? history.at(-1).id + 1 : 0,
+            let time = new Date(dateObj.getTime()).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            let record = new historyRecord(
+              history.length > 0 ? history.at(-1).id + 1 : 0,
               `${dateObj.getDate()}/${parseInt(dateObj.getMonth()) + 1}/${dateObj.getFullYear()}`, //extract the day/month/year from the date object
-              time, $("#player-ign").val() ? $("#player-ign").val() : null, startlvl,
-              startexp, endlvl, endexp, expGained, total, $("#trans-type")[0].checked);
+              time,
+              $("#player-ign").val() ? $("#player-ign").val() : null,
+              startlvl,
+              startexp,
+              endlvl,
+              endexp,
+              expGained,
+              total,
+              $("#trans-type")[0].checked,
+            );
             history.push(record);
-            localStorage.setItem('history', JSON.stringify(history));
+            localStorage.setItem("history", JSON.stringify(history));
             refreshHistory();
           } else {
             alert("Rate should be greater than 0");
@@ -245,12 +282,12 @@ calculate = () => {
               expGained = 0;
               let duration = 0;
               if (startexp !== 0) {
-                if ($("#startpercent").is(':checked')) {
+                if ($("#startpercent").is(":checked")) {
                   startexp = lvlUpExp[startlvl] * (startexp / 100);
                 }
               }
               if (endexp !== 0) {
-                if ($("#endpercent").is(':checked')) {
+                if ($("#endpercent").is(":checked")) {
                   endexp = lvlUpExp[endlvl] * (endexp / 100);
                 }
               }
@@ -262,17 +299,26 @@ calculate = () => {
               $("#total").html(`${formatNum(total.toFixed(2))}`);
               $("#total-exp").remove();
               $("#outputbox").append(`<p id="total-exp"></p>`);
-              $("#total-exp").html(`Total exp: ${formatNum(expGained.toFixed(2))}<br>
+              $("#total-exp")
+                .html(`Total exp: ${formatNum(expGained.toFixed(2))}<br>
                   Estimated duration: ${formatNum(duration.toFixed(2))} hrs`);
               let dateObj = new Date();
-              let record = new historyRecord(history.length > 0 ? history.at(-1).id + 1 : 0,
+              let record = new historyRecord(
+                history.length > 0 ? history.at(-1).id + 1 : 0,
                 `${dateObj.getDate()}/${parseInt(dateObj.getMonth()) + 1}/${dateObj.getFullYear()}`,
-                `${new Date(dateObj.getTime()).toLocaleTimeString().replace(/(.*)\D\d+/, '$1')}`,
-                $("#player-ign").val() ? $("#player-ign").val() : null, startlvl,
-                startexp, endlvl, endexp, expGained, total, $("#trans-type")[0].checked);
+                `${new Date(dateObj.getTime()).toLocaleTimeString().replace(/(.*)\D\d+/, "$1")}`,
+                $("#player-ign").val() ? $("#player-ign").val() : null,
+                startlvl,
+                startexp,
+                endlvl,
+                endexp,
+                expGained,
+                total,
+                $("#trans-type")[0].checked,
+              );
               //$("#player-ign").val("");
               history.push(record);
-              localStorage.setItem('history', JSON.stringify(history));
+              localStorage.setItem("history", JSON.stringify(history));
               refreshHistory();
             } else {
               alert("Enter price");
@@ -282,7 +328,9 @@ calculate = () => {
           }
         }
       } else {
-        alert("Missing or invalid level. Start level should be less than or equal to end level.");
+        alert(
+          "Missing or invalid level. Start level should be less than or equal to end level.",
+        );
       }
     } else {
       alert("Missing or invalid level. Pick a level 1-200.");
@@ -290,21 +338,21 @@ calculate = () => {
   } else {
     alert("Missing or invalid level. Pick a level 1-200.");
   }
-}
+};
 
 ConvertToCSV = (objArray) => {
-  let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-  let str = '';
+  let array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+  let str = "";
   for (let i = 0; i < array.length; i++) {
-    let line = '';
+    let line = "";
     for (let index in array[i]) {
-      if (line != '') line += ','
+      if (line != "") line += ",";
       line += array[i][index];
     }
-    str += line + '\r\n';
+    str += line + "\r\n";
   }
   return str;
-}
+};
 
 searchIgn = () => {
   let ign = $("#search-ign-input").val();
@@ -312,50 +360,60 @@ searchIgn = () => {
     type: "GET",
     url: `${infoUrl}?name=${ign}`,
     dataType: "JSON",
-    beforeSend: function() {
+    beforeSend: function () {
       $("#loading").show(1000);
     },
-    success: function(data) {
+    success: function (data) {
       let playerData = data;
-      if (typeof playerData.name !== 'undefined') {
+      if (typeof playerData.name !== "undefined") {
         $("#success").show("fast");
         let dateObj = new Date();
-        let time = new Date(dateObj.getTime()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        let p = new Player(players.length > 0 ? players.at(-1).id + 1 : 0,
-          playerData.name, `${dateObj.getDate()}/${parseInt(dateObj.getMonth()) + 1}/${dateObj.getFullYear()}`,
-          time, playerData.guild, playerData.level, playerData.job, playerData.exp);
+        let time = new Date(dateObj.getTime()).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        let p = new Player(
+          players.length > 0 ? players.at(-1).id + 1 : 0,
+          playerData.name,
+          `${dateObj.getDate()}/${parseInt(dateObj.getMonth()) + 1}/${dateObj.getFullYear()}`,
+          time,
+          playerData.guild,
+          playerData.level,
+          playerData.job,
+          playerData.exp,
+        );
         players.push(p);
         localStorage.setItem("players", JSON.stringify(players));
         refreshLogs();
         setTimeout(() => {
           $("#success").hide("slow");
-        }, 2000)
+        }, 2000);
       } else {
-        $("#search-ign-input").css('color', 'red');
+        $("#search-ign-input").css("color", "red");
         $("#search-ign-input").val("Player not found");
         $("#error").show();
         setTimeout(() => {
           $("#error").hide("slow");
-          $("#search-ign-input").css('color', 'black');
+          $("#search-ign-input").css("color", "black");
           $("#search-ign-input").val("");
-        }, 2000)
+        }, 2000);
       }
     },
-    error: function() {
+    error: function () {
       $("#loading").hide();
       $("#error").show("fast");
       setTimeout(() => {
         $("#error").hide("slow");
-      }, 2000)
+      }, 2000);
     },
-    complete: function() {
+    complete: function () {
       $("#loading").hide();
-    }
+    },
   });
-}
+};
 
 showExpTable = (data) => {
-  let expTable = []
+  let expTable = [];
   let values = "";
   let lvls = [];
   for (i = 0; i < data.length; i++) {
@@ -366,14 +424,14 @@ showExpTable = (data) => {
       values += data[i];
     }
   }
-  expTable = expTable.filter(function(element) {
+  expTable = expTable.filter(function (element) {
     return element !== undefined;
   });
-  expTable = expTable.filter(function(entry) {
+  expTable = expTable.filter(function (entry) {
     return /\S/.test(entry);
   });
   for (i = 0; i < expTable.length; i++) {
-    let row = expTable[i].split(',');
+    let row = expTable[i].split(",");
     lvls.push(row[0]);
     lvlUpExp.push(row[1]);
     totalexp.push(row[2]);
@@ -388,15 +446,15 @@ showExpTable = (data) => {
       </tr>
     `);
   }
-}
+};
 
 deleteLog = (item) => {
-  let val = $(item).attr('value');
+  let val = $(item).attr("value");
   $(item).parent().parent().parent().hide("slow");
-  setTimeout(()=>{
+  setTimeout(() => {
     $(item).parent().parent().parent().remove();
   }, 2000);
-  players.forEach(elem => {
+  players.forEach((elem) => {
     if (elem.id == val) {
       players.splice(players.indexOf(elem), 1);
     }
@@ -404,27 +462,27 @@ deleteLog = (item) => {
   if (window.localStorage) {
     localStorage.setItem("players", JSON.stringify(players));
   }
-}
+};
 
 deleteRecord = (item) => {
-  let val = $(item).attr('value');
+  let val = $(item).attr("value");
   $(item).parent().parent().hide("slow");
-  setTimeout(()=>{
+  setTimeout(() => {
     $(item).parent().parent().remove();
   }, 2000);
-  history.forEach(elem => {
+  history.forEach((elem) => {
     if (elem.id == val) {
       history.splice(history.indexOf(elem), 1);
       if (elem.type === true) {
-        if(totalGain - elem.total <= 0){
+        if (totalGain - elem.total <= 0) {
           totalGain = 0;
-        }else{
+        } else {
           totalGain -= elem.total;
         }
       } else {
-        if(totalLoss - elem.total <= 0){
+        if (totalLoss - elem.total <= 0) {
           totalLoss = 0;
-        }else{
+        } else {
           totalLoss -= elem.total;
         }
       }
@@ -437,14 +495,14 @@ deleteRecord = (item) => {
     localStorage.setItem("total-loss", JSON.stringify(totalLoss));
     localStorage.setItem("total-gain", JSON.stringify(totalGain));
   }
-}
+};
 
 refreshHistory = () => {
   $("#history-record-box").html("");
   totalGain = 0;
   totalLoss = 0;
   if (history.length > 0) {
-    history.forEach(item => {
+    history.forEach((item) => {
       let date = item.date;
       $("#history-record-box").append(`
         <div class="history-record-item">
@@ -462,7 +520,7 @@ refreshHistory = () => {
              <hr class="history-record-hr">
              <div class="history-record-footer-info">
                <div class="date-box">
-                ${item.date} - ${typeof item.time == 'undefined' ? new Date(date.getTime()).toLocaleTimeString().replace(/(.*)\D\d+/, '$1') : item.time}
+                ${item.date} - ${typeof item.time == "undefined" ? new Date(date.getTime()).toLocaleTimeString().replace(/(.*)\D\d+/, "$1") : item.time}
                </div>
                <div class="ign-box">
                 ${item.playerName !== null ? item.playerName : ""}
@@ -483,31 +541,31 @@ refreshHistory = () => {
     $("#total-loss").html(`${formatNum(totalLoss.toFixed(2))}`);
     $("#total-gain").html(`${formatNum(totalGain.toFixed(2))}`);
   }
-}
+};
 
 refreshLogs = () => {
-  let avatarUrl = "https://maplelegends.com/api/getavatar?name=";
-  let jobImg = "https://maplelegends.com/static/images/rank/";
+  let avatarUrl = "https://legends.ml/api/getavatar?name=";
+  let jobImg = "https://legends.ml/static/images/rank/";
   $("#roster-box-players").html("");
   if (players.length > 0) {
     let arrLen = players.length;
-    players.forEach(item => {
+    players.forEach((item) => {
       if (item.job === "Islander") {
-        jobImg = "https://maplelegends.com/static/images/rank/islander.png";
+        jobImg = "https://legends.ml/static/images/rank/islander.png";
       } else if (item.job === "Beginner") {
-        jobImg = "https://maplelegends.com/static/images/rank/beginner.png";
+        jobImg = "https://legends.ml/static/images/rank/beginner.png";
       } else if (warriorJobs.includes(item.job)) {
-        jobImg = "https://maplelegends.com/static/images/rank/warrior.png";
+        jobImg = "https://legends.ml/static/images/rank/warrior.png";
       } else if (pirateJobs.includes(item.job)) {
-        jobImg = "https://maplelegends.com/static/images/rank/pirate.png";
+        jobImg = "https://legends.ml/static/images/rank/pirate.png";
       } else if (thiefJobs.includes(item.job)) {
-        jobImg = "https://maplelegends.com/static/images/rank/thief.png";
+        jobImg = "https://legends.ml/static/images/rank/thief.png";
       } else if (magicianJobs.includes(item.job)) {
-        jobImg = "https://maplelegends.com/static/images/rank/magician.png";
+        jobImg = "https://legends.ml/static/images/rank/magician.png";
       } else if (bowmanJobs.includes(item.job)) {
-        jobImg = "https://maplelegends.com/static/images/rank/bowman.png";
+        jobImg = "https://legends.ml/static/images/rank/bowman.png";
       } else {
-        jobImg = "https://maplelegends.com/static/images/rank/all.png";
+        jobImg = "https://legends.ml/static/images/rank/all.png";
       }
 
       $("#roster-box-players").append(`
@@ -528,7 +586,7 @@ refreshLogs = () => {
               <tr>
                 <td class="roster-player-start-time">
                   <span title="${item.date}">
-                    ${typeof item.time == 'undefined' ? "N/A" : item.time}
+                    ${typeof item.time == "undefined" ? "N/A" : item.time}
                   </span>
                 </td>
                 <td class="roster-player-exp"><span class="player-exp-bar">${item.exp}</span></td>
@@ -546,11 +604,14 @@ refreshLogs = () => {
         `);
     });
 
-    $(".finalize-btn").attr("title", "Check buyer's current EXP and add data to calculator. Buyer can enter cash shop or change channel to refresh EXP");
+    $(".finalize-btn").attr(
+      "title",
+      "Check buyer's current EXP and add data to calculator. Buyer can enter cash shop or change channel to refresh EXP",
+    );
   } else {
     $("#roster-box-players").html("");
   }
-}
+};
 
 filterTable = () => {
   let input = $("#searchlvl").val();
